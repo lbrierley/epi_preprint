@@ -8,4 +8,4 @@ Interactive plot demo for [bioRxiv](https://lbrierley.github.io/cov_preprints/bi
 
 Only [bioRxiv](https://biorxiv.org) via the [Rxivist API](https://rxivist.org/) and [arXiv](https://arxiv.org) via the [arXiv API](https://arxiv.org/help/api) are fully supported. Preprint data for [medRxiv](https://medrxiv.org) are extracted using via in-development [medrxivr](https://github.com/mcguinlu/medrxivr) package. 
 
-Further COVID-19 research is available from other preprint repositories without currently available APIs, e.g. [preprints.org](https://www.preprints.org), or non-repository platforms, e.g. [virological.org](https://virological.org). Data are subject to timeliness of upload metadata reaching the API.
+Further COVID-19 research is available from other preprint repositories without currently available APIs, e.g. [preprints.org](https://www.preprints.org), or non-repository platforms, e.g., [virological.org](https://virological.org). Data are subject to latest availability of metadata through APIs.
