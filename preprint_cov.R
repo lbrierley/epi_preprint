@@ -38,6 +38,7 @@ fetch_preprints <- function(query, server, page_size = 250){
     }
     
     df <- data.table::rbindlist(lapply(result_list, function(x) rbind_pages(x)))
+    df$url <- df$biorxiv_url
     return(df[!duplicated(df$id),]) # Remove pre-prints duplicated between search queries
     
   } else if (server=="arxiv"){
@@ -140,5 +141,5 @@ cov_query <- c("coronavirus","coronaviruses","ncov","SARS-CoV-2","COVID-19") # S
 cov_start <- "2019-12-29" # Set start date defined as notification of first cluster
 
 preprint_track(cov_query, server = "bioRxiv", startdate = cov_start)
-preprint_track(cov_query, server = "arxiv", startdate = cov_start)
+preprint_track(cov_query, server = "arXiv", startdate = cov_start)
 preprint_track(cov_query, server = "medRxiv", startdate = cov_start, pointsize=1.5)
