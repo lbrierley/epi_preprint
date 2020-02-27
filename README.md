@@ -6,6 +6,6 @@ Searches are conducted for COVID-19 using keywords `"coronavirus", "coronaviruse
 
 Interactive plot demo for [bioRxiv](https://lbrierley.github.io/cov_preprints/biorxiv_cov_preprints.html), [arXiv](https://lbrierley.github.io/cov_preprints/arxiv_cov_preprints.html), [medrXiv](https://lbrierley.github.io/cov_preprints/medrxiv_cov_preprints.html). 
 
-Only [bioRxiv](https://biorxiv.org) (using the [Rxivist API](https://rxivist.org/)) and [arXiv](https://arxiv.org) (using the [arXiv API](https://arxiv.org/help/api)) are fully supported. Preprint data for [medRxiv](https://medrxiv.org) are extracted using the in-development [medrxivr] package (https://github.com/mcguinlu/medrxivr). 
+Only [bioRxiv](https://biorxiv.org) via the [Rxivist API](https://rxivist.org/) ([Abdill & Blekhman 2019](https://elifesciences.org/articles/45133)) and [arXiv](https://arxiv.org) via the [arXiv API](https://arxiv.org/help/api) are fully supported. Preprint data for [medRxiv](https://medrxiv.org) are extracted using via in-development [medrxivr](https://github.com/mcguinlu/medrxivr) package ([McGuinness](https://github.com/mcguinlu/)). 
 
 Further COVID-19 research is available from other preprint repositories without currently available APIs, e.g. [preprints.org](https://www.preprints.org), or non-repository platforms, e.g. [virological.org](https://virological.org). Data are subject to timeliness of upload metadata reaching the API.
