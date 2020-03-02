@@ -10,8 +10,10 @@ Further COVID-19 research is available from other preprint repositories without 
 
 ### Interactive plot demos (using plotly)
 
+[medRxiv](https://lbrierley.github.io/cov_preprints/medrxiv_cov_preprints.html) 
+
 [bioRxiv](https://lbrierley.github.io/cov_preprints/biorxiv_cov_preprints.html)
 
 [arXiv](https://lbrierley.github.io/cov_preprints/arxiv_cov_preprints.html)
 
-[medrXiv](https://lbrierley.github.io/cov_preprints/medrxiv_cov_preprints.html) 
+
