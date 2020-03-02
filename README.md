@@ -8,7 +8,7 @@ Only [bioRxiv](https://biorxiv.org) via the [Rxivist API](https://rxivist.org/) 
 
 Further COVID-19 research is available from other preprint repositories without currently available APIs, e.g. [preprints.org](https://www.preprints.org), or non-repository platforms, e.g., [virological.org](https://virological.org). Data are subject to latest availability of metadata through APIs.
 
-## Interactive plot demos
+### Interactive plot demos
 
 [bioRxiv](https://lbrierley.github.io/cov_preprints/biorxiv_cov_preprints.html)
 
