@@ -72,9 +72,9 @@ fetch_preprints <- function(query, server, exc=NULL, page_size = 250){
     df <- data.frame(title = result_list$title,
                      url = paste0("http://medrxiv.org", gsub("\\?.*", "",result_list$link)),
                      doi = gsub("v.*", "", gsub("/content/","",result_list$link)),
-                     category = gsub("\n.*","",result_list$subject),
+                     category = gsub("\n.*","",gsub("\\\\.*","",result_list$subject)),
                      first_posted = as.Date(strptime(result_list$date, "%Y%m%d")))
-    
+
     df <- df[order(df$first_posted),] # Remove NAs in date
     df <- df[order(df$first_posted),] # Order by date
     
