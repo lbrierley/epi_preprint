@@ -1,6 +1,6 @@
 ### Preprint uploads during the COVID-19 (SARS-CoV-2) pandemic
 
-`preprint_full_analyses_6_1_21.R` conducts queries of preprint servers and extracts metadata using respective APIs for two purposes: plot the rise in preprints addressing the current pandemic over time as interactive visualisations, and quantifying rates of preprint posting for previous epidemics and Google search trends of interest (i.e. code supporting the article 'Lessons from the influx of preprints during the early COVID-19 pandemic').
+`preprint_full_analyses_7_1_21.R` conducts queries of preprint servers and extracts metadata using respective APIs for two purposes: plot the rise in preprints addressing the current pandemic over time as interactive visualisations, and quantifying rates of preprint posting for previous epidemics and Google search trends of interest (i.e. code supporting the article 'Lessons from the influx of preprints during the early COVID-19 pandemic').
 
 Searches are conducted for COVID-19 using keywords `"coronavirus", "coronaviruses", "ncov", "SARS-CoV-2", "COVID-19"`. Preprint counts are plotted as both step curves and interactive points hyperlinking to preprints upon click. Colour code denotes preprint server categorisation.
 
