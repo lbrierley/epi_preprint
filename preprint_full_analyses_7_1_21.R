@@ -1,10 +1,15 @@
-#################################################################
-# Supporting code for ms 'The role of research preprints in the #
-#          academic response to the COVID-19 epidemic'          #
-#                                                               #
-# Liam Brierley, Dept of Biostatistics, University of Liverpool #
-#                            18/3/20                            #
-#################################################################
+#######################################################################
+#             Preprint tracker for SARS-CoV-2 / COVID-19 &            #
+# supporting code for ms 'Lessons from the influx of preprints during # 
+#                     the early COVID-19 pandemic'                    #
+#                                                                     #
+# Liam Brierley, Dept of Health Data Science, University of Liverpool #
+#                                7/1/21                               #
+#######################################################################
+
+#########
+# Setup #
+#########
 
 rm(list=ls())
 
@@ -19,17 +24,18 @@ library(plotly)
 library(reshape2)
 library(XML)
 
-
-
-# Set working directory
-setwd("M:\\Git\\lbrierley.github.io\\cov_preprints\\")
-
 # Define category translation for arXiv
 arxiv_cats <- data.frame(abb = c("astro-ph","astro-ph.CO","astro-ph.EP","astro-ph.GA","astro-ph.HE","astro-ph.IM","astro-ph.SR","cond-mat.dis-nn","cond-mat.mes-hall","cond-mat.mtrl-sci","cond-mat.other","cond-mat.quant-gas","cond-mat.soft","cond-mat.stat-mech","cond-mat.str-el","cond-mat.supr-con","cs.AI","cs.AR","cs.CC","cs.CE","cs.CG","cs.CL","cs.CR","cs.CV","cs.CY","cs.DB","cs.DC","cs.DL","cs.DM","cs.DS","cs.ET","cs.FL","cs.GL","cs.GR","cs.GT","cs.HC","cs.IR","cs.IT","cs.LG","cs.LO","cs.MA","cs.MM","cs.MS","cs.NA","cs.NE","cs.NI","cs.OH","cs.OS","cs.PF","cs.PL","cs.RO","cs.SC","cs.SD","cs.SE","cs.SI","cs.SY","econ.GN","econ.EM","eess.AS","eess.IV","eess.SP","gr-qc","hep-ex","hep-lat","hep-ph","hep-th","math.AC","math.AG","math.AP","math.AT","math.CA","math.CO","math.CT","math.CV","math.DG","math.DS","math.FA","math.GM","math.GN","math.GR","math.GT","math.HO","math.IT","math.KT","math.LO","math.MG","math.MP","math.NA","math.NT","math.OA","math.OC","math.PR","math.QA","math.RA","math.RT","math.SG","math.SP","math.ST","math-ph","nlin.AO","nlin.CD","nlin.CG","nlin.PS","nlin.SI","nucl-ex","nucl-th","physics.acc-ph","physics.ao-ph","physics.app-ph","physics.atm-clus","physics.atom-ph","physics.bio-ph","physics.chem-ph","physics.class-ph","physics.comp-ph","physics.data-an","physics.ed-ph","physics.flu-dyn","physics.gen-ph","physics.geo-ph","physics.hist-ph","physics.ins-det","physics.med-ph","physics.optics","physics.plasm-ph","physics.pop-ph","physics.soc-ph","physics.space-ph","q-bio.BM","q-bio.CB","q-bio.GN","q-bio.MN","q-bio.NC","q-bio.OT","q-bio.PE","q-bio.QM","q-bio.SC","q-bio.TO","q-fin.CP","q-fin.EC","q-fin.GN","q-fin.MF","q-fin.PM","q-fin.PR","q-fin.RM","q-fin.ST","q-fin.TR","quant-ph","stat.AP","stat.CO","stat.ME","stat.ML","stat.OT","stat.TH"),
                          lab = c("Astrophysics","Cosmology and Nongalactic Astrophysics","Earth and Planetary Astrophysics","Astrophysics of Galaxies","High Energy Astrophysical Phenomena","Instrumentation and Methods for Astrophysics","Solar and Stellar Astrophysics","Disordered Systems and Neural Networks","Mesoscale and Nanoscale Physics","Materials Science","Other Condensed Matter","Quantum Gases","Soft Condensed Matter","Statistical Mechanics","Strongly Correlated Electrons","Superconductivity","Artificial Intelligence","Hardware Architecture","Computational Complexity","Computational Engineering, Finance, and Science","Computational Geometry","Computation and Language","Cryptography and Security","Computer Vision and Pattern Recognition","Computers and Society","Databases","Distributed, Parallel, and Cluster Computing","Digital Libraries","Discrete Mathematics","Data Structures and Algorithms","Emerging Technologies","Formal Languages and Automata Theory","General Literature","Graphics","Computer Science and Game Theory","Human-Computer Interaction","Information Retrieval","Information Theory","Learning","Logic in Computer Science","Multiagent Systems","Multimedia","Mathematical Software","Numerical Analysis","Neural and Evolutionary Computing","Networking and Internet Architecture","Other Computer Science","Operating Systems","Performance","Programming Languages","Robotics","Symbolic Computation","Sound","Software Engineering","Social and Information Networks","Systems and Control","General Economics","Econometrics","Audio and Speech Processing","Image and Video Processing","Signal Processing","General Relativity and Quantum Cosmology","High Energy Physics - Experiment","High Energy Physics - Lattice","High Energy Physics - Phenomenology","High Energy Physics - Theory","Commutative Algebra","Algebraic Geometry","Analysis of PDEs","Algebraic Topology","Classical Analysis and ODEs","Combinatorics","Category Theory","Complex Variables","Differential Geometry","Dynamical Systems","Functional Analysis","General Mathematics","General Topology","Group Theory","Geometric Topology","History and Overview","Information Theory","K-Theory and Homology","Logic","Metric Geometry","Mathematical Physics","Numerical Analysis","Number Theory","Operator Algebras","Optimization and Control","Probability","Quantum Algebra","Rings and Algebras","Representation Theory","Symplectic Geometry","Spectral Theory","Statistics Theory","Mathematical Physics","Adaptation and Self-Organizing Systems","Chaotic Dynamics","Cellular Automata and Lattice Gases","Pattern Formation and Solitons","Exactly Solvable and Integrable Systems","Nuclear Experiment","Nuclear Theory","Accelerator Physics","Atmospheric and Oceanic Physics","Applied Physics","Atomic and Molecular Clusters","Atomic Physics","Biological Physics","Chemical Physics","Classical Physics","Computational Physics","Data Analysis, Statistics and Probability","Physics Education","Fluid Dynamics","General Physics","Geophysics","History and Philosophy of Physics","Instrumentation and Detectors","Medical Physics","Optics","Plasma Physics","Popular Physics","Physics and Society","Space Physics","Biomolecules","Cell Behavior","Genomics","Molecular Networks","Neurons and Cognition","Other Quantitative Biology","Populations and Evolution","Quantitative Methods","Subcellular Processes","Tissues and Organs","Computational Finance","Economics","General Finance","Mathematical Finance","Portfolio Management","Pricing of Securities","Risk Management","Statistical Finance","Trading and Market Microstructure","Quantum Physics","Applications","Computation","Methodology","Machine Learning","Other Statistics","Statistics Theory"))
 
-# Define functions
-fetch_preprints <- function(query, server, exc=NULL, page_size = 250){
+# Define static snapshot of medRxiv
+mx_data <- mx_snapshot()
+
+####################
+# Define functions #
+####################
+
+fetch_preprints <- function(query, server, exc="", page_size = 250){
   
   if (server=="biorxiv"){
     
@@ -57,7 +63,7 @@ fetch_preprints <- function(query, server, exc=NULL, page_size = 250){
     result_list <- xmlToList(xmlParse(
       paste0("http://export.arxiv.org/api/query?search_query=all:",paste(query, collapse="+OR+"),"&start=0&max_results=", page_size)))
     
-    # Create dataframe for arXiv results using same structure as to bioRxiv results
+    # Create dataframe for arXiv results using same structure as bioRxiv results
     df <- data.frame(title = unlist(lapply(result_list[8:length(result_list)], function(x) x$title)),
                      abstract = unlist(lapply(result_list[8:length(result_list)], function(x) x$summary)),
                      url = unlist(lapply(result_list[8:length(result_list)], function(x) x$id)),
@@ -71,18 +77,20 @@ fetch_preprints <- function(query, server, exc=NULL, page_size = 250){
     
   } else if (server=="medrxiv") {
     
-    # Search using medrxiv R package  
-    result_list <- mx_search(c(query, toupper(query), tolower(query), stringr::str_to_title(query)), deduplicate = FALSE, NOT = exc) # use all case variants
+    # Search using medRxivr R package  
+    result_list <- mx_search(data = mx_data, 
+                             query = c(query, toupper(query), tolower(query), stringr::str_to_title(query)), 
+                             deduplicate = FALSE, 
+                             NOT = exc) # use all case variants
     
-    # Create dataframe for arXiv results using same structure as to bioRxiv results
+    # Create dataframe for medRxiv results using same structure as bioRxiv results
     df <- data.frame(title = result_list$title,
                      abstract = result_list$abstract,
-                     url = paste0("http://medrxiv.org", gsub("\\?.*", "",result_list$link)),
-                     doi = gsub("v.*", "", gsub("/content/","",result_list$link)),
-                     category = gsub("\n.*","",result_list$subject),
-                     first_posted = as.Date(strptime(result_list$date, "%Y%m%d")))
+                     url = result_list$link_page,
+                     doi = gsub("v.*", "", gsub("https://www.medrxiv.org/content/","",result_list$link_page)),
+                     category = gsub("\n.*","",result_list$category),
+                     first_posted = as.Date(result_list$date))
     
-    df <- df[order(df$first_posted),] # Remove NAs in date
     df <- df[order(df$first_posted),] # Order by date
     
     # Replace missing categories
@@ -143,13 +151,13 @@ plot_preprints <- function(df, server, pointsize=3){
 }
 
 # Complete functions for ease
-preprint_track_plot <- function(query, server, startdate, enddate = as.Date(Sys.time(), format="%Y-%m-%d"), pointsize=3, exc=NULL){
+preprint_track_plot <- function(query, server, startdate, enddate = as.Date(Sys.time(), format="%Y-%m-%d"), pointsize=3, exc=""){
   rxiv <- fetch_preprints(query, server = tolower(server), exc)
   rxiv <- process_preprints(rxiv, startdate, enddate)
   plot_preprints(rxiv, server, pointsize)
 }
 
-preprint_track_all <- function(query, startdate, enddate = as.Date(Sys.time(), format="%Y-%m-%d"), exc=NULL, name=NULL, return_data=FALSE){
+preprint_track_all <- function(query, startdate, enddate = as.Date(Sys.time(), format="%Y-%m-%d"), exc="", name=NULL, return_data=FALSE){
   df <- data.table::rbindlist(
     lapply(c("biorxiv", "arxiv", "medrxiv"), function(x) {
       df <- fetch_preprints(query, server = x, exc)
@@ -170,7 +178,9 @@ preprint_track_all <- function(query, startdate, enddate = as.Date(Sys.time(), f
   }
 }
 
-
+######################################
+# Interactive preprint tracker plots #
+######################################
 
 # Extract preprint information for COVID-19
 cov_query <- c("coronavirus","coronaviruses","ncov","SARS-CoV-2","COVID-19") # Set search query
@@ -181,13 +191,15 @@ preprint_track_plot(cov_query, server = "bioRxiv", startdate = cov_start)
 preprint_track_plot(cov_query, server = "arXiv", startdate = cov_start)
 preprint_track_plot(cov_query, server = "medRxiv", startdate = cov_start, pointsize=1.2, exc="uncover") # Exclude false positive generated by *ncov*
 
+######################################
+# Interactive preprint tracker plots #
+######################################
+
 # Count totals
 cov_all <- preprint_track_all(cov_query, cov_start, exc="uncover", return_data=TRUE)
 table(cov_all$server) # totals per server
 nrow(cov_all) # grand total
 prop.table(table(cov_all$server)) # proportion per server
-
-
 
 # Extract preprint information for additional pathogens and plot comparative curves
 ebov_query <- c("ebola", "ebolavirus", "ebolaviruses", "ZEBOV")
@@ -200,6 +212,7 @@ zika_end <- "2017-04-01"
 
 flu_query <- c("influenza")
 flu_start <- "2019-09-30"
+flu_end <- "2020-09-30"
 
 chol_query <- c("cholera", "vibrio+cholerae", "v.+cholerae")
 chol_start <- "2016-10-06"
@@ -208,22 +221,25 @@ chol_end <- "2018-10-06"
 total_curves <- rbind(preprint_track_all(cov_query, cov_start, exc="uncover", name="SARS-CoV-2, 2019"), 
                       preprint_track_all(ebov_query, ebov_start, ebov_end, name="Zaire ebolavirus, 2014"),
                       preprint_track_all(zika_query, zika_start, zika_end, name="Zika virus, 2015"),
-                      preprint_track_all(flu_query, flu_start, name="Seasonal influenza, 2019"),
+                      preprint_track_all(flu_query, flu_start, flu_end, name="Seasonal influenza, 2019"),
                       preprint_track_all(chol_query, chol_start, chol_end, name="Cholera, 2016"))
 
 # Set plot legend order
 total_curves$virus <- factor(total_curves$virus, levels = c("Zaire ebolavirus, 2014", "Zika virus, 2015", "Cholera, 2016", "Seasonal influenza, 2019", "SARS-CoV-2, 2019"))
 
 # Produce comparative preprint curves
-ggplot(total_curves, aes(days, total, color=virus)) +  
+fig_S1 <- ggplot(total_curves, aes(days, total, color=virus)) +  
   geom_line(lwd=1) + 
   xlab('Days since first reported cluster') +  
   ylab("Total preprints posted") +
+  scale_y_log10(breaks=c(1,10,100,1000,10000),labels=c(1,10,100,1000,10000)) +
   theme_bw(base_size = 11) +
-  theme(legend.justification=c(1,1), legend.position=c(.9,.9), legend.title=element_blank(), legend.box.background = element_rect(colour = "black")) +
+  theme(legend.justification=c(1,1), legend.position=c(.9,.95), legend.title=element_blank(), legend.box.background = element_rect(colour = "black")) +
   scale_color_manual(values=c("#009E73","#0072B2","#CC79A7","#F0E442","#D55E00"))
 
-# Estimate rate of preprint posting through fitting OLS linear regression
+fig_S1 + ggsave("Figure_S1.png", width = 8, height = 4)
+
+# Estimate simple rate of preprint posting through fitting OLS linear regression
 dt <- data.table(total_curves)
 rate_dt <- dt[,list(rate=lm(total~days)$coef["days"]),by=virus]
 rate_dt$relrate <- max(rate_dt$rate)/rate_dt$rate
@@ -232,14 +248,14 @@ rate_dt[,2:4] <- round(rate_dt[,2:4],3)
 rate_dt
 
 # Extract preprint information for each year of seasonal influenza and plot comparative curves
-flu_curves <- rbind(preprint_track_all(flu_query, "2019-09-30", name="2019"), 
+flu_curves <- rbind(preprint_track_all(flu_query, "2019-09-30", "2020-09-30", name="2019"),
                     preprint_track_all(flu_query, "2018-09-30", "2019-09-30", name="2018"),
                     preprint_track_all(flu_query, "2017-09-30", "2018-09-30", name="2017"),
                     preprint_track_all(flu_query, "2016-09-30", "2017-09-30", name="2016"),
                     preprint_track_all(flu_query, "2015-09-30", "2016-09-30", name="2015"),
                     preprint_track_all(flu_query, "2014-09-30", "2015-09-30", name="2014"))
 
-ggplot(flu_curves, aes(days, total, color=virus)) +  
+fig_S2 <- ggplot(flu_curves, aes(days, total, color=virus)) +  
   geom_line(lwd=1) + 
   xlab('Days since seasonal flu period onset') +  
   ylab("Total influenza preprints posted") +
@@ -247,15 +263,16 @@ ggplot(flu_curves, aes(days, total, color=virus)) +
   theme(legend.justification=c(1,1), legend.position=c(.16,.91), legend.title=element_blank(), legend.box.background = element_rect(colour = "black")) +
   scale_color_manual(values=c("#D55E00","#F0E442","#009E73","#56B4E9","#0072B2","#CC79A7"))
 
+fig_S2 + ggsave("Figure_S2.png", width = 8, height = 4)
 
 
 # Read in and plot Google Trends values
-gt <- read.csv("gt.csv")
+gt <- read.csv("C:\\Users\\Liam\\Documents\\GitHub\\epi_preprint\\gt.csv")
 gt$Date <- as.Date(gt$Date, format="%d/%m/%Y")
 gt <- melt(gt, id.vars = "Date")
 gt$variable <- gsub("\\.","+",gt$variable)
 
-ggplot(gt, aes(x = Date, y = value)) +  
+fig_1 <- ggplot(gt, aes(x = Date, y = value)) +  
   geom_line(lwd=1, aes(color=variable)) + 
   scale_color_manual(values=c("#0072B2","#D55E00")) +
   geom_vline(xintercept=as.Date("2020-01-22"), color="#D55E00", lwd=0.8, lty="dashed", alpha=0.6) +
@@ -266,3 +283,6 @@ ggplot(gt, aes(x = Date, y = value)) +
   labs(color = "search terms") +
   theme_bw(base_size = 11) +
   theme(legend.justification=c(1,1), legend.position=c(.95,.9), legend.box.background = element_rect(colour = "black"))
+
+fig_1 + ggsave("Figure_1.png", width = 8, height = 4)
+
