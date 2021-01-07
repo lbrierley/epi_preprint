@@ -4,7 +4,7 @@
 
 Searches are conducted for COVID-19 using keywords `"coronavirus", "coronaviruses", "ncov", "SARS-CoV-2", "COVID-19"`. Preprint counts are plotted as both step curves and interactive points hyperlinking to preprints upon click. Colour code denotes preprint server categorisation.
 
-Only [bioRxiv](https://biorxiv.org) via the [Rxivist API](https://rxivist.org/) and [arXiv](https://arxiv.org) via the [arXiv API](https://arxiv.org/help/api) are fully supported. Preprint data for [medRxiv](https://medrxiv.org) are extracted using via in-development [medrxivr](https://github.com/mcguinlu/medrxivr) package. 
+Only [bioRxiv](https://biorxiv.org) via the [Rxivist API](https://rxivist.org/), [medRxiv](https://medrxiv.org) via the [medrxivr](https://github.com/mcguinlu/medrxivr) package, and [arXiv](https://arxiv.org) via the [arXiv API](https://arxiv.org/help/api) are fully supported.
 
 Further COVID-19 research is available from other preprint repositories without currently available APIs, e.g. [preprints.org](https://www.preprints.org), or non-repository platforms, e.g., [virological.org](https://virological.org). Data are subject to latest availability of metadata through APIs.
 
